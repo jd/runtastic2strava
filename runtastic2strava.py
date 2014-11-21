@@ -49,12 +49,17 @@ for activity in filter(lambda a: a[1] >= last_sync_day, activities):
     msg['To'] = STRAVA_UPLOAD
     msg['Subject'] = six.text_type(activity_id)
     msg['Date'] = utils.formatdate()
-    part = email_mime_base.MIMEBase( "application", "octet-stream")
-    part.set_payload(resp.read())
+    part = email_mime_base.MIMEBase("application", "octet-stream")
+    payload = resp.read()
+    filename = "%s.tcx" % activity_id
+    # Save the file locally, just in case.
+    with file(filename, "w") as f:
+        f.write(payload)
+    part.set_payload(payload)
     encoders.encode_base64(part)
     part.add_header('Content-Disposition',
-                    'attachment; filename="%s.tcx"'
-                    % activity_id)
+                    'attachment; filename="%s"'
+                    % filename)
     msg.attach(part)
     s.sendmail(settings['strava_user'], [STRAVA_UPLOAD], msg.as_string())
     print("Sent activity %s from %s" % (activity_id, activity[1]))
