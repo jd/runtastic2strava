@@ -53,7 +53,7 @@ for activity in filter(lambda a: a[1] >= last_sync_day, activities):
     payload = resp.read()
     filename = "%s.tcx" % activity_id
     # Save the file locally, just in case.
-    with file(filename, "w") as f:
+    with file("archives/" + filename, "w") as f:
         f.write(payload)
     part.set_payload(payload)
     encoders.encode_base64(part)
