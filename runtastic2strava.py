@@ -11,6 +11,7 @@ import requests
 import six
 from six.moves import email_mime_base
 from six.moves import email_mime_multipart
+from xml.dom import minidom
 
 
 with open("settings.json", "r") as f:
@@ -40,7 +41,7 @@ s = smtplib.SMTP('localhost')
 for activity in filter(lambda a: a[1] >= last_sync_day, activities):
     activity_id = activity[0]
     resp = requests.get(
-        "https://www.runtastic.com/en/users/%s/sport-sessions/%s.tcx"
+        "https://www.runtastic.com/en/users/%s/sport-sessions/%s.gpx"
         % (settings['runtastic_username'], activity_id),
         cookies=login.cookies)
     msg = email_mime_multipart.MIMEMultipart()
@@ -49,11 +50,19 @@ for activity in filter(lambda a: a[1] >= last_sync_day, activities):
     msg['Subject'] = six.text_type(activity_id)
     msg['Date'] = utils.formatdate()
     part = email_mime_base.MIMEBase("application", "octet-stream")
-    filename = "%s.tcx" % activity_id
+    filename = "%s.gpx" % activity_id
     # Save the file locally, just in case.
     with file("archives/" + filename, "w") as f:
         f.write(resp.text)
-    part.set_payload(resp.text)
+
+    # Copy the <metadata><desc> field to <trk><name> for Strava
+    gpx = minidom.parseString(resp.text)
+    description = gpx.getElementsByTagName('desc')[0].firstChild.nodeValue
+    name = gpx.createElement("name")
+    name.appendChild(gpx.createTextNode(description))
+    gpx.getElementsByTagName('trk')[0].appendChild(name)
+
+    part.set_payload(gpx.toxml())
     encoders.encode_base64(part)
     part.add_header('Content-Disposition',
                     'attachment; filename="%s"'
