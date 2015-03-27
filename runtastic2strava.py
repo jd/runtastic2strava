@@ -53,7 +53,7 @@ for activity in filter(lambda a: a[1] >= last_sync_day, activities):
     filename = "%s.gpx" % activity_id
     # Save the file locally, just in case.
     with file("archives/" + filename, "w") as f:
-        f.write(resp.text)
+        f.write(resp.text.encode("UTF-8"))
 
     # Copy the <metadata><desc> field to <trk><name> for Strava
     gpx = minidom.parseString(resp.text)
