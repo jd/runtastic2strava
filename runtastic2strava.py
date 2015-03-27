@@ -55,13 +55,6 @@ for activity in filter(lambda a: a[1] >= last_sync_day, activities):
     with file("archives/" + filename, "w") as f:
         f.write(resp.text.encode("UTF-8"))
 
-    # Copy the <metadata><desc> field to <trk><name> for Strava
-    gpx = minidom.parseString(resp.text)
-    description = gpx.getElementsByTagName('desc')[0].firstChild.nodeValue
-    name = gpx.createElement("name")
-    name.appendChild(gpx.createTextNode(description))
-    gpx.getElementsByTagName('trk')[0].appendChild(name)
-
     part.set_payload(gpx.toxml())
     encoders.encode_base64(part)
     part.add_header('Content-Disposition',
