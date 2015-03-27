@@ -41,7 +41,7 @@ s = smtplib.SMTP('localhost')
 for activity in filter(lambda a: a[1] >= last_sync_day, activities):
     activity_id = activity[0]
     resp = requests.get(
-        "https://www.runtastic.com/en/users/%s/sport-sessions/%s.gpx"
+        "https://www.runtastic.com/en/users/%s/sport-sessions/%s.tcx"
         % (settings['runtastic_username'], activity_id),
         cookies=login.cookies)
     msg = email_mime_multipart.MIMEMultipart()
@@ -50,12 +50,12 @@ for activity in filter(lambda a: a[1] >= last_sync_day, activities):
     msg['Subject'] = six.text_type(activity_id)
     msg['Date'] = utils.formatdate()
     part = email_mime_base.MIMEBase("application", "octet-stream")
-    filename = "%s.gpx" % activity_id
+    filename = "%s.tcx" % activity_id
     # Save the file locally, just in case.
     with file("archives/" + filename, "w") as f:
         f.write(resp.text.encode("UTF-8"))
 
-    part.set_payload(gpx.toxml())
+    part.set_payload(resp.text)
     encoders.encode_base64(part)
     part.add_header('Content-Disposition',
                     'attachment; filename="%s"'
