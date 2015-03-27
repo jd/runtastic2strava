@@ -33,9 +33,9 @@ activities = json.loads(re.search(r"index_data = ([^;]+);", js).group(1))
 
 last_sync_day = (datetime.datetime.utcnow()
                  - datetime.timedelta(
-                     days=settings.get('days_window', 3))).strftime("%Y-%m-%d")
+                     days=settings.get('days_window', settings['sync_days']))).strftime("%Y-%m-%d")
 
-s = smtplib.SMTP('localhost')
+s = smtplib.SMTP(settings['smtp_server'])
 
 # Only send the last N days of activities
 for activity in filter(lambda a: a[1] >= last_sync_day, activities):
