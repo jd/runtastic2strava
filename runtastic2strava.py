@@ -11,7 +11,6 @@ import requests
 import six
 from six.moves import email_mime_base
 from six.moves import email_mime_multipart
-from xml.dom import minidom
 
 
 with open("settings.json", "r") as f:
