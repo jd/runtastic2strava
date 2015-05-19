@@ -2,7 +2,5 @@
     "runtastic_email": "me@example.com",
     "runtastic_username": "foo-bar",
     "runtastic_pass": "f00bar",
-    "strava_user": "me@example.com",
-    "sync_days": "3",
-    "smtp_server": "localhost"
+    "strava_access_token": "f00b4z"
 }
