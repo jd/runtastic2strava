@@ -3,7 +3,6 @@ import datetime
 import json
 import re
 
-from lxml import html
 import requests
 import six
 import stravalib
@@ -22,9 +21,7 @@ resp = requests.get("https://www.runtastic.com/en/users/%s/sport-sessions"
                     % settings['runtastic_username'],
                     cookies=login.cookies)
 
-tree = html.fromstring(resp.text)
-js = tree.xpath('//script')[17].text
-activities = json.loads(re.search(r"index_data = ([^;]+);", js).group(1))
+activities = json.loads(re.search(r"index_data = ([^;]+);", resp.text).group(1))
 
 last_sync_day = (datetime.datetime.utcnow()
                  - datetime.timedelta(
