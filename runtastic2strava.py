@@ -45,6 +45,8 @@ for activity in filter(lambda a: a[1] >= last_sync_day, activities):
         try:
             client.upload_activity(f, data_type="tcx")
         except stravalib.exc.ActivityUploadFailed as e:
-            if 'duplicate' not in six.text_type(e):
+            if not ('duplicate' in six.text_type(e)
+                    or 'Unrecognized file type' in six.text_type(e)):
                 raise
+
     print("Sent activity %s from %s" % (activity_id, activity[1]))
