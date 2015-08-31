@@ -21,7 +21,11 @@ resp = requests.get("https://www.runtastic.com/en/users/%s/sport-sessions"
                     % settings['runtastic_username'],
                     cookies=login.cookies)
 
-activities = json.loads(re.search(r"index_data = ([^;]+);", resp.text).group(1))
+match_data = re.search(r"index_data = ([^;]+);", resp.text)
+if not match_data:
+    raise Exception("Unable to find index_data in body:\n%s" % resp.text)
+
+activities = json.loads(match_data.group(1))
 
 last_sync_day = (datetime.datetime.utcnow()
                  - datetime.timedelta(
