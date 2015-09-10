@@ -17,13 +17,18 @@ STRAVA_UPLOAD = "upload@strava.com"
 login = requests.post("https://www.runtastic.com/en/d/users/sign_in",
                       data={"user[email]": settings['runtastic_email'],
                             "user[password]": settings['runtastic_pass']})
+
+if login.status_code // 100 != 2:
+    print("Error logging in Runtastic, aborting")
+
 resp = requests.get("https://www.runtastic.com/en/users/%s/sport-sessions"
                     % settings['runtastic_username'],
                     cookies=login.cookies)
 
+if resp.status_code // 100 != 2:
+    print("Error doing Runtastic request, aborting")
+
 match_data = re.search(r"index_data = ([^;]+);", resp.text)
-if not match_data:
-    raise Exception("Unable to find index_data in body:\n%s" % resp.text)
 
 activities = json.loads(match_data.group(1))
 
