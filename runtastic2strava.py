@@ -2,6 +2,7 @@
 import datetime
 import json
 import re
+import sys
 
 import requests
 import six
@@ -27,8 +28,12 @@ resp = requests.get("https://www.runtastic.com/en/users/%s/sport-sessions"
 
 if resp.status_code // 100 != 2:
     print("Error doing Runtastic request, aborting")
+    sys.exit(1)
 
 match_data = re.search(r"index_data = ([^;]+);", resp.text)
+if not match_data:
+    print("Error looking for data, aborting")
+    sys.exit(1)
 
 activities = json.loads(match_data.group(1))
 
