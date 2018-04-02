@@ -53,7 +53,7 @@ for activity in filter(lambda a: a[1] >= last_sync_day, activities):
         cookies=login.cookies)
     filename = "%s.tcx" % activity_id
     # Save the file locally, just in case.
-    with open("archives/" + filename, "w+") as f:
+    with open(filename, "w+") as f:
         f.write(resp.text)
         f.seek(0)
         try:
