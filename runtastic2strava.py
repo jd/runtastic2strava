@@ -12,7 +12,7 @@ import stravalib
 EMAIL = os.getenv("RUNTASTIC_EMAIL")
 PASSWORD = os.getenv("RUNTASTIC_PASS")
 USERNAME = os.getenv("RUNTASTIC_USERNAME")
-DAYS_WINDOW = os.getenv("RUNTASTIC_DAYS_WINDOW", 3)
+DAYS_WINDOW = int(os.getenv("RUNTASTIC_DAYS_WINDOW", 3))
 STRAVA_ACCESS_TOKEN = os.getenv("STRAVA_ACCESS_TOKEN")
 STRAVA_UPLOAD = "upload@strava.com"
 
