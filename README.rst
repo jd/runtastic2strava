@@ -1,6 +1,10 @@
 runtastic2strava
 ================
 
+.. warning::
+
+As of August 2019, Runtastic decided to retire their Web site. That means there is no more way to download the GPX files from the Web site, making the program obsolete.
+
 This a Python script used to send sport sessions from Runtastic_ to Strava_.
 
 To run it, export the following variables in your environment and run the
